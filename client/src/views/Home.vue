@@ -43,6 +43,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { addToHistory } from '../utils/history.js'
 
 const router = useRouter()
 const loading = ref(true)
@@ -58,6 +59,9 @@ async function fetchRandomSecret() {
     hasSecret.value = data.hasSecret
     secret.value = data.secret
     message.value = data.message
+    if (data.hasSecret && data.secret) {
+      addToHistory(data.secret)
+    }
   } catch (error) {
     console.error('获取秘密失败:', error)
     hasSecret.value = false

@@ -84,7 +84,8 @@ function loadHistory() {
 }
 
 function handleRemove(secretId) {
-  historyList.value = removeFromHistory(secretId)
+  removeFromHistory(secretId)
+  loadHistory()
 }
 
 function handleClearAll() {
@@ -92,7 +93,8 @@ function handleClearAll() {
 }
 
 function confirmClearAll() {
-  historyList.value = clearHistory()
+  clearHistory()
+  loadHistory()
   showConfirmDialog.value = false
 }
 

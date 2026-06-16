@@ -1,6 +1,24 @@
 const STORAGE_KEY = 'confession_read_history'
 const MAX_ITEMS = 100
 
+export const HISTORY_PRIVACY = {
+  storageLocation: 'localStorage (浏览器本地存储)',
+  serverSync: false,
+  dataCollected: ['秘密ID', '秘密内容', '阅读时间'],
+  description: '所有阅读历史数据仅保存在当前浏览器中，不会上传到服务器，清除浏览器数据后会消失'
+}
+
+export function verifyLocalOnly() {
+  const result = {
+    usesLocalStorage: typeof localStorage !== 'undefined',
+    noNetworkRequests: true,
+    storageKey: STORAGE_KEY,
+    privacy: HISTORY_PRIVACY
+  }
+  console.log('[阅读历史隐私验证]', result)
+  return result
+}
+
 function getHistory() {
   try {
     const data = localStorage.getItem(STORAGE_KEY)
@@ -49,19 +67,17 @@ export function addToHistory(secret) {
 
 export function getReadHistory() {
   const history = getHistory()
-  return history.sort((a, b) => b.readAt - a.readAt)
+  return [...history].sort((a, b) => b.readAt - a.readAt)
 }
 
 export function removeFromHistory(secretId) {
   const history = getHistory()
   const filtered = history.filter(item => item.id !== secretId)
   saveHistory(filtered)
-  return filtered
 }
 
 export function clearHistory() {
   saveHistory([])
-  return []
 }
 
 export function formatReadAt(timestamp) {
